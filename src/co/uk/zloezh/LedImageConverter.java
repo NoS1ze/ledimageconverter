@@ -69,13 +69,29 @@ public class LedImageConverter {
         		}
         		}
         	
+        	
+        	boolean reverse = false;  
         	System.out.println(" ");
-        	int q = 899;
+        	int q = 900+35;
         	for (int i = 0; i < 25; i++) {
+        		reverse = !reverse;
+        		if(reverse) {
+        			System.out.println("-35");
+        			q -= 35;
+        		}else {
+        			System.out.println("-37");
+        			q -= 37;
+        		}
+
         		for (int j = 0; j < 36; j++) {
+        			if(reverse) {
+        				q--;
+        			}else {
+        				q++;
+        			}
         			System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*25) + " " + String.format("0x%08X", frame[i+j*25]) + " Goes to: " + q);
         			newFrame[q] = frame[i+j*25];
-        			q--;
+
         		}
 
         	}
