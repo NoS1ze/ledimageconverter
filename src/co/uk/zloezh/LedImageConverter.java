@@ -1,7 +1,85 @@
 package co.uk.zloezh;
 
+import java.io.FileWriter;
 
 public class LedImageConverter {
+	
+	
+	private long[] hexArray;
+	private FileWriter writer;
+	private int width;
+	private int hight;
+	
+	public LedImageConverter(FileWriter fileWriter, long[] array, int w, int h){
+		hexArray = array;
+		writer = fileWriter;
+		width = w;
+		hight = h;
+    }
+
+
+	public void writeLedString() {
+        try {
+        	writer.append("Reverced for Matric Layout:"  + System.lineSeparator());
+        	
+        	boolean reverse = false;  
+        	long[] tmpArray = new long[width*hight];
+        	int q = (hight*width)+hight -1;
+        	for (int i = 0; i < 25; i++) {
+        		reverse = !reverse;
+        		if(reverse) {
+        			q -= (hight-1);
+        		}else {
+        			q -= (hight+1);
+        		}
+
+        		for (int j = 0; j < hight; j++) {
+        			if(reverse) {
+        				q--;
+        			}else {
+        				q++;
+        			}
+        			System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
+        			tmpArray[q] = hexArray[i+j*width];
+
+        		}
+
+        	}
+        	
+
+        	for (int i = 0; i < tmpArray.length; i++) {
+        		writer.append(tmpArray[i]+",");
+        	}
+        	
+        	/*
+        	
+        	long[] newFrameShadow = new long[900];
+        	int k =0;
+        	for (int i = 0; i < newFrame.length; i++) {
+        		//System.out.print(String.format("0x%08X", newFrame[i])+ ",");
+        		z ++;
+        		if (newFrame[i] != 0) {
+        			//System.out.println("");
+        			newFrameShadow[k] = i;
+        			System.out.println(i);
+        			k++;
+        		}
+        	}
+        	
+        	for (int i = 0; i < newFrameShadow.length; i++) {
+        		//System.out.print(String.format("0x%08X", newFrame[i])+ ",");
+        		
+        			newFrameShadow[k] = i;
+        			System.out.print(newFrameShadow[i] + ",");
+        			//k++;
+
+        	} */
+        	
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+	}
     
 	public static void main(String[] args) {
         try {
