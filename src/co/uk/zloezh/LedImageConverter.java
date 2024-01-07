@@ -6,6 +6,7 @@ public class LedImageConverter {
 	
 	
 	private long[] hexArray;
+	private long[] reverseArray;
 	private FileWriter writer;
 	private int width;
 	private int hight;
@@ -15,15 +16,10 @@ public class LedImageConverter {
 		writer = fileWriter;
 		width = w;
 		hight = h;
-    }
-
-
-	public void writeLedString() {
-        try {
-        	writer.append("Reverced for Matric Layout:"  + System.lineSeparator());
+		try {
         	
         	boolean reverse = false;  
-        	long[] tmpArray = new long[width*hight];
+        	reverseArray= new long[width*hight];
         	int q = (hight*width)+hight -1;
         	for (int i = 0; i < 25; i++) {
         		reverse = !reverse;
@@ -40,40 +36,61 @@ public class LedImageConverter {
         				q++;
         			}
         			System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
-        			tmpArray[q] = hexArray[i+j*width];
+        			reverseArray[q] = hexArray[i+j*width];
 
         		}
 
         	}
         	
 
-        	for (int i = 0; i < tmpArray.length; i++) {
-        		writer.append(tmpArray[i]+",");
+        	for (int i = 0; i < reverseArray.length; i++) {
+        		writer.append(String.format("0x%08X", reverseArray[i])+ ",");
         	}
         	
-        	/*
+        	writer.append(System.lineSeparator());
+
         	
-        	long[] newFrameShadow = new long[900];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+	public void writeLedString() {
+        try {
+        	
+        	writer.append(System.lineSeparator());
+        	writer.append("LED String: " + System.lineSeparator());
+
+        	for (int i = 0; i < reverseArray.length; i++) {
+        		writer.append(String.format("0x%08X", reverseArray[i])+ ",");
+        	}
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
+	}
+	
+	public void writeShapeString() {
+        try {
+        	
+        	writer.append(System.lineSeparator());
+        	writer.append("Shape indexes: " + System.lineSeparator());
+        	
+        	long[] newFrameShadow = new long[width*hight];
         	int k =0;
-        	for (int i = 0; i < newFrame.length; i++) {
-        		//System.out.print(String.format("0x%08X", newFrame[i])+ ",");
-        		z ++;
-        		if (newFrame[i] != 0) {
-        			//System.out.println("");
+        	for (int i = 0; i < hexArray.length; i++) {
+
+        		if (reverseArray[i] != 0) {	
         			newFrameShadow[k] = i;
-        			System.out.println(i);
+        			writer.append(newFrameShadow[k] + ",");
         			k++;
         		}
         	}
         	
-        	for (int i = 0; i < newFrameShadow.length; i++) {
-        		//System.out.print(String.format("0x%08X", newFrame[i])+ ",");
-        		
-        			newFrameShadow[k] = i;
-        			System.out.print(newFrameShadow[i] + ",");
-        			//k++;
+        	writer.append(System.lineSeparator() + "Size: " + --k);
 
-        	} */
         	
         } catch (Exception e) {
             e.printStackTrace();

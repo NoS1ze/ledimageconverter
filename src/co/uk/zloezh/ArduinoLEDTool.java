@@ -12,6 +12,10 @@ import java.awt.Color;
 
 public class ArduinoLEDTool extends JFrame implements ActionListener {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	static JLabel label;
 	static JTextField t;
 	static File  pixelFile; 
@@ -24,7 +28,8 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 	public static void main(String args[]){
 		
 		try {
-		
+
+
 			// make an object of the class filechooser
 	        ArduinoLEDTool ledToolFrame = new ArduinoLEDTool();
 	        
@@ -91,6 +96,12 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 	        frame.getContentPane().add(BorderLayout.CENTER, ta);
 	        frame.getContentPane().add(BorderLayout.SOUTH, panel);
 	        frame.setVisible(true);
+	        
+			if(args.length >=1 ) {
+				pixelFile = new File( args[0]);  
+	            label.setText(pixelFile.getName());
+
+			}
     
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -140,18 +151,18 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 				            int red = color.getRed();
 				            int green = color.getGreen();
 				            int blue = color.getBlue();
-				            String hex = String.format("#%02x%02x%02x", red, green, blue);  
+				            String hex = String.format("0x%02x%02x%02x", red, green, blue);  
 				            writer.append(hex+",");
 				            long rgbValue = ((long) red << 16) | ((long) green << 8) | blue;
 				            hexArray[i++] = rgbValue;
 				         
 				         }
 				      }
-				    writer.append(System.lineSeparator());
-					writer.flush();
+					//writer.flush();
 					
 					LedImageConverter ledUtils = new LedImageConverter(writer, hexArray, img.getWidth(), img.getHeight());
 					ledUtils.writeLedString();
+					ledUtils.writeShapeString();
 					
 				    writer.close();
 				} catch (IOException e) {
