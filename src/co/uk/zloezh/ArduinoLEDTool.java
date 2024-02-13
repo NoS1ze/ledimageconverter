@@ -1,14 +1,25 @@
 package co.uk.zloezh;
 
 import java.io.*;
+import java.util.Properties;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.filechooser.*;
 import javax.imageio.*;
 import org.apache.commons.io.FilenameUtils;
+
+import co.uk.zloezh.listener.ActiveCheckBoxListener;
+import co.uk.zloezh.listener.GeneratePixelArrayListener;
+import co.uk.zloezh.listener.SendImageListener;
+
+import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.GridLayout;
 
 public class ArduinoLEDTool extends JFrame implements ActionListener {
 	
@@ -20,9 +31,47 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 	static JTextField t;
 	static File  pixelFile; 
 	static JTextField txtW,txtH;
-    
+	private static Properties properties;
+	private static List<LEDDisplayObject> objectList;
+	
 	ArduinoLEDTool()
     {
+		properties = new Properties();
+		try {
+            FileInputStream inputStream = new FileInputStream("config.properties");
+            properties.load(inputStream);
+            inputStream.close();
+            
+            String directoryPath = System.getProperty("user.dir") +  properties.getProperty("images.path");
+
+            // Create a File object for the directory
+            File directory = new File(directoryPath);
+
+            // Get a list of all files in the directory
+            File[] files = directory.listFiles();
+
+            // Check if the directory exists and is indeed a directory
+            if (directory.exists() && directory.isDirectory()) {
+                // Check if there are any files in the directory
+                if (files != null && files.length > 0) {
+                    System.out.println("Files in directory:");
+                    objectList = new ArrayList<>();
+                    for (File file : files) {
+                        System.out.println(file.getName());
+                        LEDDisplayObject object = new LEDDisplayObject(file.getCanonicalPath());
+                        objectList.add(object);
+                    }
+                } else {
+                    System.out.println("Directory is empty.");
+                }
+            } else {
+                System.out.println("Directory does not exist or is not a directory.");
+            }
+           
+        } catch (IOException e) {
+            System.err.println("Error loading properties: " + e.getMessage());
+           
+        }
     }
 	
 	public static void main(String args[]){
@@ -56,20 +105,70 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 	        btnGenerateFile.addActionListener(ledToolFrame);
 	        
 	        
-	        /*
-	        JMenuBar menuBar = new JMenuBar();
-	        JMenu mFile = new JMenu("FILE");
-	        JMenu mHelp = new JMenu("Help");
-	        menuBar.add(mFile);
-	        menuBar.add(mHelp);
-	        JMenuItem m11 = new JMenuItem("Open");
-	        JMenuItem m22 = new JMenuItem("Save as");
-	        mFile.add(m11);
-	        mHelp.add(m22); 
 	        
-	        m11.addActionListener(f1);
-	        */
+	        JMenuBar menuBar = new JMenuBar();
+	        JMenu mUtils = new JMenu("Utils");
+	        //JMenu mHelp = new JMenu("Help");
+	        menuBar.add(mUtils);
+	        //menuBar.add(mHelp);
+	        JMenuItem genArray = new JMenuItem("Convert Image");
+	       // JMenuItem m22 = new JMenuItem("Save as");
+	        mUtils.add(genArray);
+	       // mHelp.add(m22); 
+	        GeneratePixelArrayListener menuListener = new GeneratePixelArrayListener();
+	        
+	        mUtils.addActionListener(menuListener);
+	        
 	
+	        JPanel mainPanel = new JPanel(new BorderLayout());
+
+	        JPanel tablePanel = new JPanel(new GridLayout(objectList.size() + 1 , 1)); // +1 for header row
+	        
+	        JPanel labelPane = new JPanel(new GridLayout(1, 4));
+	        labelPane.add(new JLabel("Image:"));
+	        labelPane.add(new JLabel("Name:"));
+	        labelPane.add(new JLabel("Active:"));
+	        labelPane.add(new JLabel("Action:"));
+	        tablePanel.add(labelPane);
+
+
+	        for (LEDDisplayObject item : objectList) {
+	                
+	                JPanel rowPanel = new JPanel(new GridLayout(1, 4));
+	                BufferedImage img= ImageIO.read(item.getFile());
+	                ImageIcon icon=new ImageIcon(img);
+	                JLabel imgLabel = new JLabel();
+	                imgLabel.setIcon(icon);
+	                imgLabel.setBounds(100, 100,  50, 50);   
+	                rowPanel.add(imgLabel);
+	                rowPanel.add(new JLabel(item.getFile().getName()));
+
+	                
+
+	                
+	                
+	                JButton actionButton;
+	                if(item.getExtension().equals("gif") ) {
+	                	actionButton = new JButton("Play");
+	                }else {
+	                	actionButton = new JButton("Set");
+	                }
+	                
+	                Checkbox checkbox = new Checkbox();    
+	                checkbox.setBounds(100, 100,  50, 50);    
+	                checkbox.setState(item.isActive());
+	                ActiveCheckBoxListener listener = new ActiveCheckBoxListener(item,actionButton );
+	                checkbox.addItemListener(listener); 
+	                
+	                rowPanel.add(checkbox);
+	                rowPanel.add(actionButton);
+	                tablePanel.add(rowPanel);
+
+	        }
+
+	        JScrollPane scrollPane = new JScrollPane(tablePanel);
+	        
+	        mainPanel.add(scrollPane, BorderLayout.CENTER);
 	        
 	        
 	        //Creating the panel at bottom and adding components
@@ -91,11 +190,18 @@ public class ArduinoLEDTool extends JFrame implements ActionListener {
 	        //Adding Components to the frame.
 	       
 	 
-	        //frame.getContentPane().add(BorderLayout.NORTH, mb);
-	        frame.getContentPane().add(BorderLayout.NORTH, topPanel);
-	        frame.getContentPane().add(BorderLayout.CENTER, ta);
+	        frame.getContentPane().add(BorderLayout.NORTH, menuBar);
+	       // frame.getContentPane().add(BorderLayout.NORTH, topPanel);
+	       // frame.getContentPane().add(BorderLayout.CENTER, ta);
+	        frame.getContentPane().add(BorderLayout.CENTER, tablePanel);
 	        frame.getContentPane().add(BorderLayout.SOUTH, panel);
+	        
+	        
+	        
+
 	        frame.setVisible(true);
+	        
+	        
 	        
 			if(args.length >=1 ) {
 				pixelFile = new File( args[0]);  
