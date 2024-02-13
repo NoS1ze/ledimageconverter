@@ -16,7 +16,9 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FilenameUtils;
 
+import co.uk.zloezh.LEDFrame;
 import co.uk.zloezh.LedImageConverter;
+import co.uk.zloezh.utils.LEDDIsplayObjectUtils;
 
 public class GeneratePixelArrayListener implements ActionListener{
 
@@ -49,6 +51,7 @@ public class GeneratePixelArrayListener implements ActionListener{
 				    writer.append("Pixels: " + size + System.lineSeparator());
 					
 				    //Write original Hex
+				    /*
 				    long[] hexArray = new long[size];
 				    int i =0;
 				    for (int y = 0; y < img.getHeight(); y++) {
@@ -68,11 +71,19 @@ public class GeneratePixelArrayListener implements ActionListener{
 				         
 				         }
 				      }
+				      */
 					//writer.flush();
+				    LEDDIsplayObjectUtils instance = LEDDIsplayObjectUtils.getInstance();
+				    
+				    long[] hexArray = instance.hexFromImage(img);
+					LEDFrame frame = instance.generateLedFrame(hexArray);
 					
-					LedImageConverter ledUtils = new LedImageConverter(writer, hexArray, img.getWidth(), img.getHeight());
-					ledUtils.writeLedString();
-					ledUtils.writeShapeString();
+					instance.writeFrameToFile(frame, writer);
+				    instance.writeShapeToFile(frame, writer);
+				    
+					//LedImageConverter ledUtils = new LedImageConverter(writer, hexArray, img.getWidth(), img.getHeight());
+					//ledUtils.writeLedString();
+					//ledUtils.writeShapeString();
 					
 				    writer.close();
 				} catch (IOException e) {

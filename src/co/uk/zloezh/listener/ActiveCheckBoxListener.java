@@ -5,15 +5,15 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 
-import co.uk.zloezh.LEDDisplayObject;
+import co.uk.zloezh.LEDDisplayFile;
 
 public class ActiveCheckBoxListener implements ItemListener {
 
 		
-	private LEDDisplayObject displayObject;
+	private LEDDisplayFile displayObject;
 	private JButton button;
 	
-	public ActiveCheckBoxListener(LEDDisplayObject displayObjectC, JButton buttonC) {
+	public ActiveCheckBoxListener(LEDDisplayFile displayObjectC, JButton buttonC) {
 		this.displayObject = displayObjectC;
 		this.button = buttonC;
 		

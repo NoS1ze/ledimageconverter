@@ -4,18 +4,20 @@ import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
 
-public class LEDDisplayObject {
+
+
+public class LEDDisplayFile {
 	
 	private String extension;
 	File file;
 	private boolean isActive = true;
 	
-	public LEDDisplayObject(File objectFile) {
+	public LEDDisplayFile(File objectFile) {
 		this.file = objectFile;
 		this.extension = FilenameUtils.getExtension(objectFile.getName());
 	}
 	
-	public LEDDisplayObject(String filePath) {
+	public LEDDisplayFile(String filePath) {
 		
 		file = new File( filePath); 
 		this.extension = FilenameUtils.getExtension(file.getName());

@@ -3,13 +3,13 @@ package co.uk.zloezh.listener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import co.uk.zloezh.LEDDisplayObject;
+import co.uk.zloezh.LEDDisplayFile;
 
 public class SendImageListener implements ItemListener{
 
-	private LEDDisplayObject displayObject;
+	private LEDDisplayFile displayObject;
 	
-	public SendImageListener(LEDDisplayObject dObject) {
+	public SendImageListener(LEDDisplayFile dObject) {
 		this.displayObject = dObject;
 	}
 	
