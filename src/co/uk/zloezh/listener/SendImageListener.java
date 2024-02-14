@@ -1,11 +1,13 @@
 package co.uk.zloezh.listener;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import co.uk.zloezh.LEDDisplayFile;
 
-public class SendImageListener implements ItemListener{
+public class SendImageListener implements ActionListener{
 
 	private LEDDisplayFile displayObject;
 	
@@ -13,8 +15,10 @@ public class SendImageListener implements ItemListener{
 		this.displayObject = dObject;
 	}
 	
+
+
 	@Override
-	public void itemStateChanged(ItemEvent e) {
+	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		
 	}

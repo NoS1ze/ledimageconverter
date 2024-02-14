@@ -133,6 +133,8 @@ public class ArduinoLEDTool extends JFrame {
 	                	actionButton = new JButton("Play");
 	                }else {
 	                	actionButton = new JButton("Set");
+	                	SendImageListener listener = new SendImageListener(item );
+	                	actionButton.addActionListener(listener); 
 	                }
 	                
 	                Checkbox checkbox = new Checkbox();    
