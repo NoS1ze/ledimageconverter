@@ -1,4 +1,4 @@
-package co.uk.zloezh;
+package co.uk.zloezh.led;
 
 import java.io.FileInputStream;
 import java.util.Properties;

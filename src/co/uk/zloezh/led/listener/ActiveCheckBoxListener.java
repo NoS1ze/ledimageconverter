@@ -1,19 +1,20 @@
-package co.uk.zloezh.listener;
+package co.uk.zloezh.led.listener;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
 
-import co.uk.zloezh.LEDDisplayFile;
+import co.uk.zloezh.led.object.DisplayObject;
+
 
 public class ActiveCheckBoxListener implements ItemListener {
 
 		
-	private LEDDisplayFile displayObject;
+	private DisplayObject displayObject;
 	private JButton button;
 	
-	public ActiveCheckBoxListener(LEDDisplayFile displayObjectC, JButton buttonC) {
+	public ActiveCheckBoxListener(DisplayObject displayObjectC, JButton buttonC) {
 		this.displayObject = displayObjectC;
 		this.button = buttonC;
 		

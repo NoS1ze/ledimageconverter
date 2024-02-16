@@ -1,4 +1,4 @@
-package co.uk.zloezh.listener;
+package co.uk.zloezh.led.listener;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -16,9 +16,9 @@ import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FilenameUtils;
 
-import co.uk.zloezh.LEDFrame;
-import co.uk.zloezh.LedImageConverter;
-import co.uk.zloezh.utils.LEDDIsplayObjectUtils;
+import co.uk.zloezh.led.LedImageConverter;
+import co.uk.zloezh.led.object.LEDFrame;
+import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 public class GeneratePixelArrayListener implements ActionListener{
 

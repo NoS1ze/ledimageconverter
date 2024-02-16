@@ -1,4 +1,4 @@
-package co.uk.zloezh;
+package co.uk.zloezh.led;
 
 import java.io.*;
 import java.util.Properties;
@@ -12,9 +12,11 @@ import javax.swing.filechooser.*;
 import javax.imageio.*;
 import org.apache.commons.io.FilenameUtils;
 
-import co.uk.zloezh.listener.ActiveCheckBoxListener;
-import co.uk.zloezh.listener.GeneratePixelArrayListener;
-import co.uk.zloezh.listener.SendImageListener;
+import co.uk.zloezh.led.listener.GeneratePixelArrayListener;
+import co.uk.zloezh.led.listener.SendImageListener;
+import co.uk.zloezh.led.object.FileImage;
+import co.uk.zloezh.led.object.LEDScreen;
+import co.uk.zloezh.led.listener.ActiveCheckBoxListener;
 
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -32,11 +34,14 @@ public class ArduinoLEDTool extends JFrame {
 	static File  pixelFile; 
 	static JTextField txtW,txtH;
 	//private static Properties properties;
-	private static List<LEDDisplayFile> objectList;
+	private static List<FileImage> objectList;
+	public static LEDScreen screen;
 	
 	ArduinoLEDTool()
     {
 		PropertiesObject properties = PropertiesObject.getInstance();
+		
+		screen = new LEDScreen(properties.getProperty("screen.ip"),Integer.valueOf(properties.getProperty("screen.width")),Integer.valueOf(properties.getProperty("screen.height")),properties.getProperty("screen.direction"));
 		try {
             
             String directoryPath = System.getProperty("user.dir") +  properties.getProperty("images.path");
@@ -55,7 +60,7 @@ public class ArduinoLEDTool extends JFrame {
                     objectList = new ArrayList<>();
                     for (File file : files) {
                         System.out.println(file.getName());
-                        LEDDisplayFile object = new LEDDisplayFile(file.getCanonicalPath());
+                        FileImage object = new FileImage(file.getCanonicalPath());
                         objectList.add(object);
                     }
                 } else {
@@ -113,7 +118,7 @@ public class ArduinoLEDTool extends JFrame {
 	        tablePanel.add(labelPane);
 
 
-	        for (LEDDisplayFile item : objectList) {
+	        for (FileImage item : objectList) {
 	                
 	                JPanel rowPanel = new JPanel(new GridLayout(1, 4));
 	                BufferedImage img= ImageIO.read(item.getFile());
@@ -133,6 +138,8 @@ public class ArduinoLEDTool extends JFrame {
 	                	actionButton = new JButton("Play");
 	                }else {
 	                	actionButton = new JButton("Set");
+	                	SendImageListener listener = new SendImageListener(item, ledToolFrame.screen);
+	                	actionButton.addActionListener(listener); 
 	                }
 	                
 	                Checkbox checkbox = new Checkbox();    

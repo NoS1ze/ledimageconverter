@@ -1,12 +1,12 @@
-package co.uk.zloezh.utils;
+package co.uk.zloezh.led.utils;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import co.uk.zloezh.LEDFrame;
-import co.uk.zloezh.PropertiesObject;
+import co.uk.zloezh.led.PropertiesObject;
+import co.uk.zloezh.led.object.LEDFrame;
 
 public class LEDDIsplayObjectUtils {
 	

@@ -1,4 +1,4 @@
-package co.uk.zloezh;
+package co.uk.zloezh.led.object;
 
 public class LEDFrame {
 	private long[] hexArray;
