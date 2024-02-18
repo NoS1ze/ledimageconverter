@@ -7,38 +7,45 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.thread.DisplayImage;
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 
 
-public class FileImage extends DisplayObject{
+public class DisplayFile extends DisplayObject{
 	
+	protected static final Logger logger = LogManager.getLogger();
 	private String extension;
 	File file;
-	LEDFrame frame;
+	//LEDFrame frame;
 
 	
-	public FileImage(File objectFile) throws IOException {
+	public DisplayFile(File objectFile) throws IOException {
 		this.file = objectFile;
 		this.extension = FilenameUtils.getExtension(objectFile.getName());
+		this.name = objectFile.getName();
 		
-		BufferedImage img = ImageIO.read(objectFile);
+		/*BufferedImage img = ImageIO.read(objectFile);
 		LEDDIsplayObjectUtils instance = LEDDIsplayObjectUtils.getInstance();
 		long[] hexArray = instance.hexFromImage(img);
-		this.frame = instance.generateLedFrame(hexArray);
+		this.frame = instance.generateLedFrame(hexArray); */
+		logger.info(this.file.getName() + " Loaded");
 	}
 	
-	public FileImage(String filePath) throws IOException {
+	public DisplayFile(String filePath) throws IOException {
 		
 		file = new File( filePath); 
 		this.extension = FilenameUtils.getExtension(file.getName());
-	
-		BufferedImage img = ImageIO.read(file);
+		this.name = file.getName();
+		
+		/*BufferedImage img = ImageIO.read(file);
 		LEDDIsplayObjectUtils instance = LEDDIsplayObjectUtils.getInstance();
 		long[] hexArray = instance.hexFromImage(img);
-		this.frame = instance.generateLedFrame(hexArray);
+		this.frame = instance.generateLedFrame(hexArray); */
+		logger.info(this.file.getName() + " Loaded");
 	}
 	
 	public File getFile() {
@@ -57,10 +64,8 @@ public class FileImage extends DisplayObject{
 
 	@Override
 	public Thread render(LEDScreen screen) {
-		
-		Thread thred = new DisplayImage(this.frame);
-		thred.start();
-		return thred;
+
+		return null;
 	}
 	
 

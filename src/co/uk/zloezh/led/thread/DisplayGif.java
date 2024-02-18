@@ -1,6 +1,9 @@
 package co.uk.zloezh.led.thread;
 
+import java.io.File;
+
 import co.uk.zloezh.led.object.LEDFrame;
+import co.uk.zloezh.led.object.LEDScreen;
 
 public class DisplayGif extends Thread{
 	
@@ -10,6 +13,10 @@ public class DisplayGif extends Thread{
 		this.frame = cFrame;
 	}
 	
+	public DisplayGif(File file, LEDScreen screen) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void run() {
 	        long startTime = System.currentTimeMillis();
 	        int i = 0;

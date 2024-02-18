@@ -10,12 +10,12 @@ import co.uk.zloezh.led.object.DisplayObject;
 import co.uk.zloezh.led.object.LEDScreen;
 
 
-public class SendImageListener implements ActionListener{
+public class SendGifListener implements ActionListener{
 
 	private DisplayObject displayObject;
 	private LEDScreen screen;
 	
-	public SendImageListener(DisplayObject dObject, LEDScreen cScreen) {
+	public SendGifListener(DisplayObject dObject, LEDScreen cScreen) {
 		this.displayObject = dObject;
 		this.screen = cScreen;
 	}

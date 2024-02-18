@@ -9,4 +9,5 @@ module ImageConverter {
 	requires org.apache.commons.io;
 	requires com.ibasco.gifreader;
 	requires java.net.http;
+	requires org.apache.logging.log4j;
 }

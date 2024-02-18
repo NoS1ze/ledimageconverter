@@ -14,7 +14,9 @@ import org.apache.commons.io.FilenameUtils;
 
 import co.uk.zloezh.led.listener.GeneratePixelArrayListener;
 import co.uk.zloezh.led.listener.SendImageListener;
-import co.uk.zloezh.led.object.FileImage;
+import co.uk.zloezh.led.object.DisplayFile;
+import co.uk.zloezh.led.object.DisplayGifFile;
+import co.uk.zloezh.led.object.DisplayImageFile;
 import co.uk.zloezh.led.object.LEDScreen;
 import co.uk.zloezh.led.listener.ActiveCheckBoxListener;
 
@@ -34,7 +36,7 @@ public class ArduinoLEDTool extends JFrame {
 	static File  pixelFile; 
 	static JTextField txtW,txtH;
 	//private static Properties properties;
-	private static List<FileImage> objectList;
+	private static List<DisplayFile> objectList;
 	public static LEDScreen screen;
 	
 	ArduinoLEDTool()
@@ -56,12 +58,19 @@ public class ArduinoLEDTool extends JFrame {
             if (directory.exists() && directory.isDirectory()) {
                 // Check if there are any files in the directory
                 if (files != null && files.length > 0) {
-                    System.out.println("Files in directory:");
+                   // System.out.println("Files in directory:");
                     objectList = new ArrayList<>();
                     for (File file : files) {
-                        System.out.println(file.getName());
-                        FileImage object = new FileImage(file.getCanonicalPath());
-                        objectList.add(object);
+                       // System.out.println(file.getName());
+                    	String extension = FilenameUtils.getExtension(file.getName());
+                		if(extension.equals("png")) {
+                			objectList.add(new DisplayImageFile(file));
+                		}
+                		if(extension.equals("gif")) {
+                			objectList.add(new DisplayGifFile(file));
+                		}
+                       
+                        
                     }
                 } else {
                     System.out.println("Directory is empty.");
@@ -118,7 +127,7 @@ public class ArduinoLEDTool extends JFrame {
 	        tablePanel.add(labelPane);
 
 
-	        for (FileImage item : objectList) {
+	        for (DisplayFile item : objectList) {
 	                
 	                JPanel rowPanel = new JPanel(new GridLayout(1, 4));
 	                BufferedImage img= ImageIO.read(item.getFile());
@@ -127,7 +136,7 @@ public class ArduinoLEDTool extends JFrame {
 	                imgLabel.setIcon(icon);
 	                imgLabel.setBounds(100, 100,  50, 50);   
 	                rowPanel.add(imgLabel);
-	                rowPanel.add(new JLabel(item.getFile().getName()));
+	                rowPanel.add(new JLabel(item.getName()));
 
 	                
 
@@ -137,10 +146,10 @@ public class ArduinoLEDTool extends JFrame {
 	                if(item.getExtension().equals("gif") ) {
 	                	actionButton = new JButton("Play");
 	                }else {
-	                	actionButton = new JButton("Set");
-	                	SendImageListener listener = new SendImageListener(item, ledToolFrame.screen);
-	                	actionButton.addActionListener(listener); 
+	                	actionButton = new JButton("Set");       
 	                }
+                	SendImageListener bListener = new SendImageListener(item, ArduinoLEDTool.screen);
+                	actionButton.addActionListener(bListener); 
 	                
 	                Checkbox checkbox = new Checkbox();    
 	                checkbox.setBounds(100, 100,  50, 50);    

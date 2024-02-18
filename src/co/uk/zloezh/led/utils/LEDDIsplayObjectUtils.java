@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import co.uk.zloezh.led.PropertiesObject;
 import co.uk.zloezh.led.object.LEDFrame;
 
@@ -12,6 +15,7 @@ public class LEDDIsplayObjectUtils {
 	
 	private static final LEDDIsplayObjectUtils instance = new LEDDIsplayObjectUtils();
 
+	protected static final Logger logger = LogManager.getLogger();
 	private  int width, hight;
 	private  String direction;
 	
@@ -52,7 +56,8 @@ public class LEDDIsplayObjectUtils {
 	        			}else {
 	        				q++;
 	        			}
-	        			System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
+	        			logger.debug("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
+	        			//System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
 	        			reverseArray[q] = hexArray[i+j*width];
 	
 	        		}
@@ -92,6 +97,8 @@ public class LEDDIsplayObjectUtils {
 			e.printStackTrace();
 		}
     	
+    	logger.info("Image written to file");
+    	
     }
     
     public void writeShapeToFile(LEDFrame frame, FileWriter fileWriter) {
@@ -121,7 +128,7 @@ public class LEDDIsplayObjectUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-		
+        logger.info("Shape written to file");
 	}
 
     public long[] hexFromImage(BufferedImage img) {

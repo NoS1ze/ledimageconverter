@@ -15,19 +15,24 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.LedImageConverter;
 import co.uk.zloezh.led.object.LEDFrame;
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 public class GeneratePixelArrayListener implements ActionListener{
+	
+	protected static final Logger logger = LogManager.getLogger();
 
 	@Override
 	public void actionPerformed(ActionEvent evnt) {
 		 // if the user presses the save button show the save dialog
         String com = evnt.getActionCommand();
         
-        System.out.println("com " + com);
+        //System.out.println("com " + com);
+        
  
 
             // create an object of JFileChooser class
@@ -35,7 +40,8 @@ public class GeneratePixelArrayListener implements ActionListener{
             int r = jFileDialog.showOpenDialog(null);
 
             if (r == JFileChooser.APPROVE_OPTION){
-                File selectedFile = new File(jFileDialog.getSelectedFile().getAbsolutePath());  
+                File selectedFile = new File(jFileDialog.getSelectedFile().getAbsolutePath()); 
+                logger.info("COnverting file: " + selectedFile.getName());
                 try {
                     
 					BufferedImage img = ImageIO.read(selectedFile);

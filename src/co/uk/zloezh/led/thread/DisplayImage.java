@@ -8,69 +8,28 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import co.uk.zloezh.led.object.LEDFrame;
+import co.uk.zloezh.led.object.LEDScreen;
+import co.uk.zloezh.led.utils.HTTPUtils;
 
 public class DisplayImage extends Thread{
 	
 	LEDFrame frame;
+	LEDScreen screen;
+	protected static final Logger logger = LogManager.getLogger();
 	
-	public DisplayImage(LEDFrame cFrame) {
+	public DisplayImage(LEDFrame cFrame, LEDScreen cScreen) {
 		this.frame = cFrame;
+		this.screen = cScreen;
 	}
 	
 	public void run() {
-
-		try {
-			 
-			 URL url = new URL("https://reqbin.com/echo");
-
-	         // Create connection object
-	         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-	         // Set the request method to POST
-	         connection.setRequestMethod("POST");
-
-	         // Enable input/output streams
-	         connection.setDoInput(true);
-	         connection.setDoOutput(true);
-
-	         // Set request parameters
-	         String param1 = "";
-	         
-	         long[] array = this.frame.getHexArray();
-	         for (int i = 0; i < array.length ; i++) {
-	        	 param1 += "-" + i + "-" + array[i];
-	         }
-	         param1 += "-";
-	         
-	         String param2 = "1";
-	         String params = "image=" + param1 + "&listening=" + param2;
-
-	         // Write parameters to the connection
-	         OutputStream outputStream = connection.getOutputStream();
-	         outputStream.write(params.getBytes(StandardCharsets.UTF_8));
-	         outputStream.flush();
-	         outputStream.close();
-
-	         // Get the response from the server
-	         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	         StringBuilder response = new StringBuilder();
-	         String line;
-
-	         while ((line = reader.readLine()) != null) {
-	             response.append(line);
-	         }
-	         reader.close();
-
-	         // Print the response
-	         System.out.println("Response: " + response.toString());
-
-	         // Disconnect the connection
-	         connection.disconnect();
-			}catch(IOException e) {
-				e.printStackTrace();
-			}
-	            
+		
+		logger.info("Started");
+		HTTPUtils.sendFrame(frame, screen);
 	        
 	}
 
