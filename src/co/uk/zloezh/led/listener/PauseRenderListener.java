@@ -1,11 +1,7 @@
 package co.uk.zloezh.led.listener;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 
 import co.uk.zloezh.led.object.DisplayObject;
@@ -13,12 +9,12 @@ import co.uk.zloezh.led.object.DisplayObject;
 import co.uk.zloezh.led.object.LEDScreen;
 
 
-public class SendGifListener implements ActionListener{
+public class PauseRenderListener implements ActionListener{
 
 	private DisplayObject displayObject;
 	private LEDScreen screen;
 	
-	public SendGifListener(DisplayObject dObject, LEDScreen cScreen) {
+	public PauseRenderListener(DisplayObject dObject, LEDScreen cScreen) {
 		this.displayObject = dObject;
 		this.screen = cScreen;
 	}
@@ -28,13 +24,17 @@ public class SendGifListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		displayObject.render(this.screen);
 		JButton button = (JButton) e.getSource();
-		PauseRenderListener newistener = new PauseRenderListener(this.displayObject, this.screen);
-		button.setText("Pause");
+		ResumeRenderListener newistener = new ResumeRenderListener(this.displayObject, this.screen);
+		button.setText("Resume");
 		button.removeActionListener(this);
-
 		button.addActionListener(newistener);
+		try {
+			this.displayObject.getRenderThread().pauseThread();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }

@@ -4,12 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.thread.LEDScreenProjected;
+import co.uk.zloezh.led.thread.RenderImage;
 
 public abstract class DisplayObject implements LEDScreenProjected {
 	
 	protected static final Logger logger = LogManager.getLogger();
 	private boolean isActive = true;
+	private boolean isRendering = false;
 	protected String name;
+	protected RenderImage renderThread;
 	
 	public String getName() {
 		return this.name;
@@ -28,4 +31,21 @@ public abstract class DisplayObject implements LEDScreenProjected {
 		return null;
 	}
 
+	public boolean isRendering() {
+		return isRendering;
+	}
+
+	public void setRendering(boolean isRendering) {
+		this.isRendering = isRendering;
+	}
+
+	public RenderImage getRenderThread() {
+		return renderThread;
+	}
+
+	public void setRenderThread(RenderImage renderThread) {
+		this.renderThread = renderThread;
+	}
+
+	
 }

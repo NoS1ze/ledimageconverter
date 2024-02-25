@@ -67,6 +67,12 @@ public class DisplayFile extends DisplayObject{
 
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return "DisplayFile [extension=" + extension + ", file=" + file + "]";
+	}
+	
 	
 
 }

@@ -5,7 +5,7 @@
 	
 	<Properties>
 		<Property name="basePath">/logs</Property>
-		<Property name="LOG_PATTERN"> %d{yyyy-MM-dd HH:mm:ss.SSS} (%tid)(%tn)(%tp)-[%p] %m%n </Property>
+		<Property name="LOG_PATTERN"> %d{yyyy-MM-dd HH:mm:ss.SSS} (%tid)(%tn)(%tp)[%C]-[%p] %m%n </Property>
 	</Properties>
 	
     <Appenders>
@@ -17,8 +17,15 @@
         </Console>
     </Appenders>
     <Loggers>
+    	
+
+    	<!--
+		<logger name="co.uk.zloezh.led.utils" level="INFO">
+	  		<AppenderRef ref="console"/>
+	  	</logger> -->
+    	
     	<!-- Root logger referring to console appender -->
-        <Root level="debug" additivity="false">
+        	<Root level="info" additivity="false">
             <AppenderRef ref="console" />
         </Root>
     </Loggers>

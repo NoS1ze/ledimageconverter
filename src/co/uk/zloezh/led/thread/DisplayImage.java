@@ -15,21 +15,21 @@ import co.uk.zloezh.led.object.LEDFrame;
 import co.uk.zloezh.led.object.LEDScreen;
 import co.uk.zloezh.led.utils.HTTPUtils;
 
-public class DisplayImage extends Thread{
+public class DisplayImage extends RenderImage{
 	
 	LEDFrame frame;
-	LEDScreen screen;
-	protected static final Logger logger = LogManager.getLogger();
+
 	
 	public DisplayImage(LEDFrame cFrame, LEDScreen cScreen) {
+		super(cScreen);
 		this.frame = cFrame;
-		this.screen = cScreen;
 	}
 	
 	public void run() {
 		
 		logger.info("Started");
-		HTTPUtils.sendFrame(frame, screen);
+		//HTTPUtils.sendFrame(frame, screen);
+		HTTPUtils.SendFrameViaUDP(frame, screen);
 	        
 	}
 

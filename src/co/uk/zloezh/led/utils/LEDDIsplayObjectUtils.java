@@ -56,7 +56,7 @@ public class LEDDIsplayObjectUtils {
 	        			}else {
 	        				q++;
 	        			}
-	        			logger.debug("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
+//	        			logger.debug("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
 	        			//System.out.println("i: " + i + ",j: "+ j + ",i+j: " + (i+j*width) + " " + String.format("0x%08X", hexArray[i+j*width]) + " Goes to: " + q);
 	        			reverseArray[q] = hexArray[i+j*width];
 	
@@ -75,6 +75,9 @@ public class LEDDIsplayObjectUtils {
         }
 		return null;
     }
+    
+    
+    
 
     public void writeFrameToFile(LEDFrame frame, FileWriter fileWriter) {
     	
@@ -133,6 +136,8 @@ public class LEDDIsplayObjectUtils {
 
     public long[] hexFromImage(BufferedImage img) {
     	//Write original Hex
+    	//logger.debug("Image Type:  " + img.getType());
+
     	int size = img.getWidth() * img.getHeight();
 	    long[] hexArray = new long[size];
 	    int i =0;
@@ -154,5 +159,7 @@ public class LEDDIsplayObjectUtils {
 	      }
 	    return hexArray;
     }
+    
+    
 
 }

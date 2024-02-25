@@ -23,6 +23,8 @@ public class DisplayGifFile extends DisplayFile{
 	
 	public DisplayGifFile(File objectFile) throws IOException {
 		super(objectFile);
+		
+		
 
 	}
 	
@@ -37,11 +39,19 @@ public class DisplayGifFile extends DisplayFile{
 	@Override
 	public Thread render(LEDScreen screen) {
 		
-		Thread thred = new DisplayGif(this.getFile(), screen);
+		DisplayGif thred = new DisplayGif(this, screen);
 		thred.start();
+		this.setRenderThread(thred);
+		this.setRendering(true);
 		return thred;
 
 	}
+
+	@Override
+	public String toString() {
+		return "DisplayGifFile [file=" + file + ", name=" + name + "]";
+	}
+	
 	
 
 }

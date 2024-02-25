@@ -1,21 +1,20 @@
 package co.uk.zloezh.led.listener;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
+
+import javax.swing.JButton;
 
 import co.uk.zloezh.led.object.DisplayObject;
 
 import co.uk.zloezh.led.object.LEDScreen;
 
 
-public class SendImageListener implements ActionListener{
+public class RenderScreenListener implements ActionListener{
 
 	private DisplayObject displayObject;
 	private LEDScreen screen;
 	
-	public SendImageListener(DisplayObject dObject, LEDScreen cScreen) {
+	public RenderScreenListener(DisplayObject dObject, LEDScreen cScreen) {
 		this.displayObject = dObject;
 		this.screen = cScreen;
 	}
@@ -24,8 +23,9 @@ public class SendImageListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		displayObject.render(this.screen);
-		
+
 	}
 
 }

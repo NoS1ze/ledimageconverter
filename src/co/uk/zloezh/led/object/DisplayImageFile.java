@@ -47,10 +47,17 @@ public class DisplayImageFile extends DisplayFile{
 	@Override
 	public Thread render(LEDScreen screen) {
 		
-		Thread thred = new DisplayImage(this.frame, screen);
+		DisplayImage thred = new DisplayImage(this.frame, screen);
 		thred.start();
+		this.setRenderThread(thred);
 		return thred;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "DisplayImageFile [frame=" + frame + ", file=" + file + ", name=" + name + "]";
+	}
+	
+	
+	
 }

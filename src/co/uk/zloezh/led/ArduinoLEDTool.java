@@ -7,18 +7,18 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.filechooser.*;
 import javax.imageio.*;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import co.uk.zloezh.led.listener.GeneratePixelArrayListener;
-import co.uk.zloezh.led.listener.SendImageListener;
-import co.uk.zloezh.led.object.DisplayFile;
-import co.uk.zloezh.led.object.DisplayGifFile;
-import co.uk.zloezh.led.object.DisplayImageFile;
-import co.uk.zloezh.led.object.LEDScreen;
-import co.uk.zloezh.led.listener.ActiveCheckBoxListener;
+
+import co.uk.zloezh.led.listener.*;
+import co.uk.zloezh.led.object.*;
+
 
 import java.awt.BorderLayout;
 import java.awt.Checkbox;
@@ -37,7 +37,9 @@ public class ArduinoLEDTool extends JFrame {
 	static JTextField txtW,txtH;
 	//private static Properties properties;
 	private static List<DisplayFile> objectList;
+	private static HashMap<DisplayObject, JButton> playButtons;  
 	public static LEDScreen screen;
+	protected static final Logger logger = LogManager.getLogger();
 	
 	ArduinoLEDTool()
     {
@@ -46,6 +48,8 @@ public class ArduinoLEDTool extends JFrame {
 		screen = new LEDScreen(properties.getProperty("screen.ip"),Integer.valueOf(properties.getProperty("screen.width")),Integer.valueOf(properties.getProperty("screen.height")),properties.getProperty("screen.direction"));
 		try {
             
+			playButtons = new HashMap<DisplayObject, JButton>();
+			
             String directoryPath = System.getProperty("user.dir") +  properties.getProperty("images.path");
 
             // Create a File object for the directory
@@ -64,10 +68,15 @@ public class ArduinoLEDTool extends JFrame {
                        // System.out.println(file.getName());
                     	String extension = FilenameUtils.getExtension(file.getName());
                 		if(extension.equals("png")) {
-                			objectList.add(new DisplayImageFile(file));
+                			DisplayImageFile imageObject = new DisplayImageFile(file);
+                			objectList.add(imageObject);
+                			logger.debug("Added to Array: " + imageObject);
                 		}
                 		if(extension.equals("gif")) {
-                			objectList.add(new DisplayGifFile(file));
+                			DisplayGifFile gifObject = new DisplayGifFile(file);
+                			objectList.add(gifObject);
+                			logger.debug("Added to Array: " + gifObject);
+                			
                 		}
                        
                         
@@ -145,11 +154,16 @@ public class ArduinoLEDTool extends JFrame {
 	                JButton actionButton;
 	                if(item.getExtension().equals("gif") ) {
 	                	actionButton = new JButton("Play");
+	                	//playButtons.put(item, actionButton);
+	                	SendGifListener bListener = new SendGifListener(item, ArduinoLEDTool.screen);
+	                	actionButton.addActionListener(bListener); 
 	                }else {
-	                	actionButton = new JButton("Set");       
+	                	actionButton = new JButton("Set");
+		                RenderScreenListener bListener = new RenderScreenListener(item, ArduinoLEDTool.screen);
+	                	actionButton.addActionListener(bListener);   
 	                }
-                	SendImageListener bListener = new SendImageListener(item, ArduinoLEDTool.screen);
-                	actionButton.addActionListener(bListener); 
+	                //RenderScreenListener bListener = new RenderScreenListener(item, ArduinoLEDTool.screen);
+                	//actionButton.addActionListener(bListener); 
 	                
 	                Checkbox checkbox = new Checkbox();    
 	                checkbox.setBounds(100, 100,  50, 50);    
