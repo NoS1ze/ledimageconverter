@@ -46,7 +46,7 @@ public class DisplayGif extends RenderImage{
 	public void run() {
 		logger.info("Started");
 	        while (true) {
-	            
+	        	logger.info("." + this.isPauseThreadFlag());
 	            	this.checkForPaused();
 
 	            		try {
@@ -74,18 +74,20 @@ public class DisplayGif extends RenderImage{
 							        NodeList children = tree.getChildNodes();
 			
 							        for (int j = 0; j < children.getLength(); j++) {
+
 							            Node nodeItem = children.item(j);
 							            if(nodeItem.getNodeName().equals("ImageDescriptor")){
 							                Map<String, Integer> imageAttr = new HashMap<String, Integer>();
 			
 							                for (int k = 0; k < imageatt.length; k++) {
+
 							                    NamedNodeMap attr = nodeItem.getAttributes();
 							                    Node attnode = attr.getNamedItem(imageatt[k]);
 							                    imageAttr.put(imageatt[k], Integer.valueOf(attnode.getNodeValue()));
 							                }
 							                if(i==0){
 							                    master = new BufferedImage(imageAttr.get("imageWidth"), imageAttr.get("imageHeight"), BufferedImage.TYPE_INT_ARGB);
-							                	
+
 							                }
 							                master.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
 							                
@@ -93,7 +95,9 @@ public class DisplayGif extends RenderImage{
 							        		long[] hexArray = instance.hexFromImage(master);
 							        		LEDFrame frame = instance.generateLedFrame(hexArray);
 										   
+
 							        		HTTPUtils.SendFrameViaUDP(frame, screen);
+	
 							        		break;
 							            }
 							        }

@@ -16,6 +16,12 @@ public class RenderImage extends Thread {
 		this.screen = screen;
 	}
 	
+	public boolean isPauseThreadFlag() {
+		return pauseThreadFlag;
+	}
+
+
+
 	public void pauseThread() throws InterruptedException {
         pauseThreadFlag = true;
         logger.info("Thread Paused");
