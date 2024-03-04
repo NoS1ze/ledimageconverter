@@ -108,10 +108,10 @@ public class DisplayGif extends RenderImage{
 							        		long[] hexArray = instance.hexFromImage(master);
 							        		LEDFrame frame = instance.generateLedFrame(hexArray);
 										   
-							        		waitTime = imageAttr.get("delayTime") - (System.currentTimeMillis() - lastFrameTime);
+							        		waitTime = imageAttr.get("delayTime") - (System.currentTimeMillis() - lastFrameTime) -100;
 							        		logger.debug("waitTime: " + waitTime);
 							        		if(waitTime > 0) {
-							        			logger.debug("Waiting: " + waitTime);
+							        			//logger.debug("Waiting: " + waitTime);
 							        			this.sleep(waitTime);
 							        			
 							        		}
