@@ -113,7 +113,7 @@ public class HTTPUtils {
 	         try {
 	        	 
 	        	 DatagramSocket socket = new DatagramSocket();
-	        	 socket.setSoTimeout(200);
+	        	 socket.setSoTimeout(400);
 	         long[] array = frame.getHexArray();
 	         for (int i = 0; i < array.length ; i++) {
 	         //for (int i = 0; i < 500; i++) {
