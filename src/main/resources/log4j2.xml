@@ -19,10 +19,10 @@
     <Loggers>
     	
 
-    	<!--
+    	
 		<logger name="co.uk.zloezh.led.utils" level="INFO">
 	  		<AppenderRef ref="console"/>
-	  	</logger> -->
+	  	</logger> 
     	
     	<!-- Root logger referring to console appender -->
         	<Root level="debug" additivity="false">
