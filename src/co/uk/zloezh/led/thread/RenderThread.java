@@ -5,13 +5,13 @@ import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.object.LEDScreen;
 
-public class RenderImage extends Thread {
+public class RenderThread extends Thread {
 	protected LEDScreen screen;
 	protected static final Logger logger = LogManager.getLogger();
 	private final Object LOCK_OBJECT = new Object();
     private boolean pauseThreadFlag = false;
 	
-	public RenderImage(LEDScreen screen) {
+	public RenderThread(LEDScreen screen) {
 		super();
 		this.screen = screen;
 	}
@@ -45,5 +45,4 @@ public class RenderImage extends Thread {
             }
         }
     }
-	
 }

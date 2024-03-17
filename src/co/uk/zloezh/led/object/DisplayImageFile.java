@@ -10,7 +10,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import co.uk.zloezh.led.thread.DisplayImage;
+import co.uk.zloezh.led.thread.DisplayFrame;
+
+import co.uk.zloezh.led.thread.RenderThread;
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 
@@ -47,7 +49,7 @@ public class DisplayImageFile extends DisplayFile{
 	@Override
 	public Thread render(LEDScreen screen) {
 		
-		DisplayImage thred = new DisplayImage(this.frame, screen);
+		RenderThread thred = new DisplayFrame(this.frame, screen);
 		thred.start();
 		this.setRenderThread(thred);
 		return thred;

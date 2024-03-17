@@ -23,7 +23,7 @@ public class RotationTimeListener implements ListSelectionListener {
 	public void valueChanged(ListSelectionEvent e) {
 		JList list = (JList)e.getSource();
 		Integer time = (Integer.valueOf((String)list.getSelectedValue()))*1000*60;
-		HTTPUtils.sendCommandViaHttp("/brwsr=1/parameters?rotationTime=" + time + " ",screen);
+		HTTPUtils.sendCommandViaHttp("/cmd=1/parameters?rotationTime=" + time + " ",screen);
 		///brwsr=1/parameters?brightness=6&updates=100&rotationTime=600001
 
 	}

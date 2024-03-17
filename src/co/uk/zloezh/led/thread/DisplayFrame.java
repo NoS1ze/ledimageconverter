@@ -15,12 +15,12 @@ import co.uk.zloezh.led.object.LEDFrame;
 import co.uk.zloezh.led.object.LEDScreen;
 import co.uk.zloezh.led.utils.HTTPUtils;
 
-public class DisplayImage extends RenderImage{
+public class DisplayFrame extends RenderThread{
 	
 	LEDFrame frame;
 
 	
-	public DisplayImage(LEDFrame cFrame, LEDScreen cScreen) {
+	public DisplayFrame(LEDFrame cFrame, LEDScreen cScreen) {
 		super(cScreen);
 		this.frame = cFrame;
 	}

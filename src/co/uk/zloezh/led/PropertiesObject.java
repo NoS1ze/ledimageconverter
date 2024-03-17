@@ -11,7 +11,7 @@ public class PropertiesObject {
     private PropertiesObject(){
 		properties = new Properties();
 		try {
-            FileInputStream inputStream = new FileInputStream("config.properties");
+            FileInputStream inputStream = new FileInputStream("appfiles/config.properties");
             properties.load(inputStream);
             inputStream.close();
 		}catch(Exception e) {

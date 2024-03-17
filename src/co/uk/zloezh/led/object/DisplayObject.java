@@ -1,10 +1,13 @@
 package co.uk.zloezh.led.object;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.thread.LEDScreenProjected;
-import co.uk.zloezh.led.thread.RenderImage;
+
+import co.uk.zloezh.led.thread.RenderThread;
 
 public abstract class DisplayObject implements LEDScreenProjected {
 	
@@ -12,10 +15,15 @@ public abstract class DisplayObject implements LEDScreenProjected {
 	private boolean isActive = true;
 	private boolean isRendering = false;
 	protected String name;
-	protected RenderImage renderThread;
+	protected RenderThread renderThread;
+	protected File iconFile;
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String pName) {
+		this.name = pName;
 	}
 	
 	public boolean isActive() {
@@ -28,6 +36,7 @@ public abstract class DisplayObject implements LEDScreenProjected {
 
 	public Thread render(LEDScreen screen) {
 		// TODO Auto-generated method stub
+		this.isRendering = true;
 		return null;
 	}
 
@@ -39,12 +48,20 @@ public abstract class DisplayObject implements LEDScreenProjected {
 		this.isRendering = isRendering;
 	}
 
-	public RenderImage getRenderThread() {
+	public RenderThread getRenderThread() {
 		return renderThread;
 	}
 
-	public void setRenderThread(RenderImage renderThread) {
+	public void setRenderThread(RenderThread renderThread) {
 		this.renderThread = renderThread;
+	}
+
+	public File getIconFile() {
+		return iconFile;
+	}
+
+	public void setIconFile(File iconFile) {
+		this.iconFile = iconFile;
 	}
 
 	

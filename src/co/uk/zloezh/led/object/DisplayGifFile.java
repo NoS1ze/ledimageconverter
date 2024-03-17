@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import co.uk.zloezh.led.thread.DisplayGif;
-import co.uk.zloezh.led.thread.DisplayImage;
+import co.uk.zloezh.led.thread.RenderThread;
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 

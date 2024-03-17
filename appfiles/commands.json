@@ -1,0 +1,9 @@
+{"commands": [
+  {"id": "KNVL", "command": "/cmd=1/0/set"},
+  {"id": "Rainbow Strip", "command": "/cmd=1/1/set"},
+  {"id": "Random Strip", "command": "/cmd=1/2/set"},
+  {"id": "White Strip", "command": "/cmd=1/3/set"},
+  {"id": "OFF", "command": "/cmd=1/4/set"},
+  {"id": "Cat", "command": "/cmd=1/5/set"}
+  ]
+}

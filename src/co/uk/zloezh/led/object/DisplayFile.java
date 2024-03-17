@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import co.uk.zloezh.led.thread.DisplayImage;
+
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
 
@@ -24,10 +24,11 @@ public class DisplayFile extends DisplayObject{
 
 	
 	public DisplayFile(File objectFile) throws IOException {
+		
 		this.file = objectFile;
 		this.extension = FilenameUtils.getExtension(objectFile.getName());
 		this.name = objectFile.getName();
-		
+		this.setIconFile(this.file);
 		/*BufferedImage img = ImageIO.read(objectFile);
 		LEDDIsplayObjectUtils instance = LEDDIsplayObjectUtils.getInstance();
 		long[] hexArray = instance.hexFromImage(img);
@@ -37,10 +38,10 @@ public class DisplayFile extends DisplayObject{
 	
 	public DisplayFile(String filePath) throws IOException {
 		
-		file = new File( filePath); 
+		this.file = new File( filePath); 
 		this.extension = FilenameUtils.getExtension(file.getName());
 		this.name = file.getName();
-		
+		this.setIconFile(this.file);
 		/*BufferedImage img = ImageIO.read(file);
 		LEDDIsplayObjectUtils instance = LEDDIsplayObjectUtils.getInstance();
 		long[] hexArray = instance.hexFromImage(img);
@@ -64,7 +65,7 @@ public class DisplayFile extends DisplayObject{
 
 	@Override
 	public Thread render(LEDScreen screen) {
-
+		
 		return null;
 	}
 

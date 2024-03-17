@@ -24,7 +24,7 @@ public class RateListener implements ChangeListener {
 		JSlider jSlider = (JSlider)e.getSource();
 		
 		if (jSlider.getValueIsAdjusting() == false) {
-			HTTPUtils.sendCommandViaHttp("/brwsr=1/parameters?updates=" + jSlider.getValue() + "&",screen);
+			HTTPUtils.sendCommandViaHttp("/cmd=1/parameters?updates=" + jSlider.getValue() + "&",screen);
 		}
 		
 	}

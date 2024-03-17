@@ -1,5 +1,8 @@
 package co.uk.zloezh.led.listener;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -24,7 +27,20 @@ public class BrightnessListener implements ChangeListener {
 		JSlider jSlider = (JSlider)e.getSource();
 		
 		if (jSlider.getValueIsAdjusting() == false) {
-			HTTPUtils.sendCommandViaHttp("/brwsr=1/parameters?brightness=" + jSlider.getValue() + "&",screen);
+			String responseString = HTTPUtils.sendCommandViaHttp("/cmd=1/parameters?brightness=" + jSlider.getValue() + "&",screen);
+			
+			/*
+			String patternString = "brightness=(\\d+)";
+	        
+	        Pattern pattern = Pattern.compile(patternString);
+	        Matcher matcher = pattern.matcher(responseString);
+	        
+	        if (matcher.find()) {
+	            String brightnessValue = matcher.group(1);
+	            //System.out.println("Brightness value: " + brightnessValue);
+	        } else {
+	            //System.out.println("Brightness value not found.");
+	        } */
 		}
 		
 	}

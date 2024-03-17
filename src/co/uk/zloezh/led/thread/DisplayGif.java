@@ -28,7 +28,7 @@ import co.uk.zloezh.led.object.LEDScreen;
 import co.uk.zloezh.led.utils.HTTPUtils;
 import co.uk.zloezh.led.utils.LEDDIsplayObjectUtils;
 
-public class DisplayGif extends RenderImage{
+public class DisplayGif extends RenderThread{
 	
 
 	DisplayGifFile gifObject;

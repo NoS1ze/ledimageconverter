@@ -99,7 +99,7 @@ public class HTTPUtils {
 		
 	}
 	
-	public static void sendCommandViaHttp( String command, LEDScreen screen) {
+	public static String sendCommandViaHttp( String command, LEDScreen screen) {
 		try {
 			 
 	         logger.info("Connecting to: " + screen.iPAdress);
@@ -107,7 +107,7 @@ public class HTTPUtils {
 
 	         // Create connection object
 	         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
+	         connection.setConnectTimeout(350); //set timeout
 	         // Set the request method to POST
 	         connection.setRequestMethod("POST");
 
@@ -140,17 +140,20 @@ public class HTTPUtils {
 	             response.append(line);
 	         }
 	         reader.close();
-
+	         
+	         String responseParams =  response.toString();
 	         // Print the response
-	         logger.debug("Response: " + response.toString());
+
 
 	         // Disconnect the connection
 	         connection.disconnect();
+	         logger.debug("Response: " + responseParams);
+	         return responseParams;
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
 	            
-		
+		return "";
 	}
 	
 	

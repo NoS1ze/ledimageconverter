@@ -14,6 +14,11 @@ import javax.imageio.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 
 import co.uk.zloezh.led.listener.*;
@@ -21,10 +26,11 @@ import co.uk.zloezh.led.object.*;
 
 
 import java.awt.BorderLayout;
-import java.awt.Checkbox;
+//import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Image;
 
 public class ArduinoLEDTool extends JFrame {
 	
@@ -35,9 +41,13 @@ public class ArduinoLEDTool extends JFrame {
 	static JLabel label;
 	static JTextField t;
 	static File  pixelFile; 
-	static JTextField txtW,txtH;
+	//static JTextField txtW,txtH;
+	private static JSlider brightSlider,rateSlider;
+	private static JCheckBox rotationChekBox;
+	private static JList rotationTime;
+	
 	//private static Properties properties;
-	private static List<DisplayFile> objectList;
+	private static List<DisplayObject> objectList;
 	private static HashMap<DisplayObject, JButton> playButtons;  
 	public static LEDScreen screen;
 	protected static final Logger logger = LogManager.getLogger();
@@ -88,12 +98,53 @@ public class ArduinoLEDTool extends JFrame {
             } else {
                 System.out.println("Directory does not exist or is not a directory.");
             }
+            
+            
+            
+            String filePath = "appfiles/commands.json";
+
+            // Create ObjectMapper instance
+            ObjectMapper mapper = new ObjectMapper();
+
+
+            Map<String, List<Map<String, String>>> jsonData = mapper.readValue(new File(filePath), Map.class);
+
+            // Extracting the "commands" array
+            List<Map<String, String>> commands = jsonData.get("commands");
+
+            // Displaying each command
+            for (Map<String, String> command : commands) {
+                String id = command.get("id");
+                String commandString = command.get("command");
+                System.out.println("ID: " + id + ", Command: " + commandString);
+                DisplayCommand cmd = new DisplayCommand(id,commandString);
+                objectList.add(cmd);
+                logger.debug("Added to Array: " + cmd);
+            }
+            
            
         } catch (IOException e) {
             System.err.println("Error loading properties: " + e.getMessage());
            
         }
     }
+	
+	
+	public static void setPropertiesTab(int brightness, int rate, boolean rotation, String rotationTime) {
+		brightSlider.setValue(brightness);
+		rateSlider.setValue(rate);
+		rotationChekBox.setSelected(rotation);
+		logger.debug("Protperties Tab: brightess->{}, refresh rate->{}, autorotation->{}, rotation time->{}.", brightness, rate, rotation, rotationTime);
+		//rotationTime.
+	}
+	
+	public static void setScreenAutoRotation(boolean rotation) {
+		rotationChekBox.setSelected(rotation);
+		logger.debug("Protperties Tab: autorotation->{}.", rotation);
+		//rotationTime.
+	}
+	
+	
 	
 	public static void main(String args[]){
 		
@@ -143,12 +194,13 @@ public class ArduinoLEDTool extends JFrame {
 	        labelPane.setPreferredSize(new Dimension(50,50));
 
 
-	        for (DisplayFile item : objectList) {
+	        for (DisplayObject item : objectList) {
 	                
 	                JPanel rowPanel = new JPanel(new GridLayout(1, 4));
 	                rowPanel.setPreferredSize(new Dimension(50,50));
-	                BufferedImage img= ImageIO.read(item.getFile());
-	                ImageIcon icon=new ImageIcon(img);
+	                BufferedImage img= ImageIO.read(item.getIconFile());
+	                Image image = img.getScaledInstance(50, 50, Image.SCALE_DEFAULT);
+	                ImageIcon icon=new ImageIcon(image);
 	                JLabel imgLabel = new JLabel();
 	                imgLabel.setIcon(icon);
 	                imgLabel.setBounds(0, 0,  50, 50);   
@@ -159,23 +211,26 @@ public class ArduinoLEDTool extends JFrame {
 
 	                
 	                
-	                JButton actionButton;
-	                if(item.getExtension().equals("gif") ) {
+	                JButton actionButton = null;
+	                if(item instanceof DisplayGifFile) {
 	                	actionButton = new JButton("Play");
+	                	//actionButton.setPreferredSize(new Dimension(40, 40));
+	                	//actionButton.setMaximumSize(new Dimension(40, 40));
 	                	//playButtons.put(item, actionButton);
 	                	SendGifListener bListener = new SendGifListener(item, ArduinoLEDTool.screen);
 	                	actionButton.addActionListener(bListener); 
-	                }else {
+	                }else if((item instanceof DisplayImageFile) || (item instanceof DisplayCommand)){
 	                	actionButton = new JButton("Set");
+	                	//actionButton.setPreferredSize(new Dimension(40, 40));
 		                RenderScreenListener bListener = new RenderScreenListener(item, ArduinoLEDTool.screen);
 	                	actionButton.addActionListener(bListener);   
 	                }
 	                //RenderScreenListener bListener = new RenderScreenListener(item, ArduinoLEDTool.screen);
                 	//actionButton.addActionListener(bListener); 
 	                
-	                Checkbox checkbox = new Checkbox();    
+	                JCheckBox  checkbox = new JCheckBox ();    
 	                checkbox.setBounds(0, 0,  50, 50);    
-	                checkbox.setState(item.isActive());
+	                checkbox.setSelected(item.isActive());
 	                ActiveCheckBoxListener listener = new ActiveCheckBoxListener(item,actionButton );
 	                checkbox.addItemListener(listener); 
 	                
@@ -199,11 +254,7 @@ public class ArduinoLEDTool extends JFrame {
 	        
 	        //Adding Components to the frame.
 	        
-	        JTabbedPane jTabbedPane = new JTabbedPane();
-	        //JPanel jPanelFirst = new JPanel();
 
-	        //jPanelFirst.setLayout(null);
-	        jTabbedPane.addTab("Library", mainPanel);
 	        
 	        
 	        JPanel jPanelSecond = new JPanel();
@@ -213,7 +264,7 @@ public class ArduinoLEDTool extends JFrame {
 	        
 	        
 	        JPanel jBrightnessPanel = new JPanel(new BorderLayout());
-	        JSlider brightSlider = new JSlider(0, 255, 64);
+	        brightSlider = new JSlider(0, 255, 64);
 	        brightSlider.addChangeListener( new BrightnessListener(screen));
 	        //brightSlider.add
 	        jBrightnessPanel.add(new JLabel("Brightness:"),BorderLayout.LINE_START);
@@ -222,30 +273,38 @@ public class ArduinoLEDTool extends JFrame {
 	        
 	        
 	        JPanel jRatePanel = new JPanel(new BorderLayout());
-	        JSlider rateSlider = new JSlider(1, 200, 100); 
+	        rateSlider = new JSlider(1, 200, 100); 
 	        rateSlider.addChangeListener( new RateListener(screen));
 	        jRatePanel.add(new JLabel("Updates Per Second:"),BorderLayout.LINE_START);
 	        jRatePanel.add(rateSlider,BorderLayout.CENTER);
 	        jPanelSettings.add(jRatePanel);
 	        
-            
-	        Checkbox rotation = new Checkbox(); 
-            rotation.setLabel("In Screen Autorotation");
-            rotation.setBounds(0, 0,  50, 50);    
-            rotation.setState(true);
-            rotation.addItemListener(new RotationListener(screen));
-            jPanelSettings.add(rotation);
+	        JPanel jAutoRotationPanel = new JPanel(new BorderLayout());
+	        
+	       // jPanelSecond.add(new JButton("Page_End"),BorderLayout.PAGE_END);
+	        rotationChekBox = new JCheckBox(); 
+	        rotationChekBox.setLabel("In Screen Autorotation");
+	        rotationChekBox.setBounds(0, 0,  50, 50);    
+	        rotationChekBox.setSelected(true);
+	        rotationChekBox.setEnabled(false);
+	        JButton switchButton = new JButton("Switch");
+	        switchButton.addActionListener(new RotationListener(screen));
+	        //rotationChekBox.addItemListener(new RotationListener(screen));
+            //jPanelSettings.add(rotationChekBox);
+	        jAutoRotationPanel.add(switchButton,BorderLayout.LINE_START);
+	        jAutoRotationPanel.add(rotationChekBox,BorderLayout.CENTER);
+	        jPanelSettings.add(jAutoRotationPanel);
             
             JPanel jRotationPanel = new JPanel(new BorderLayout());
             jRotationPanel.add(new JLabel("Rotation(min):"),BorderLayout.LINE_START);
             String week[]= { "1","2","4","8","16","32","64"};
-            JList list = new JList(week); //data has type Object[]
-            list.setSelectedIndex(3);
-            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-            list.setVisibleRowCount(-1);
-            list.addListSelectionListener(new RotationTimeListener(screen));            
-            jRotationPanel.add(list,BorderLayout.CENTER);
+            rotationTime = new JList(week); //data has type Object[]
+            rotationTime.setSelectedIndex(3);
+            rotationTime.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            rotationTime.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            rotationTime.setVisibleRowCount(-1);
+            rotationTime.addListSelectionListener(new RotationTimeListener(screen));            
+            jRotationPanel.add(rotationTime,BorderLayout.CENTER);
             jPanelSettings.add(jRotationPanel);
            // JScrollPane listScroller = new JScrollPane(list);
           //  listScroller.setPreferredSize(new Dimension(250, 80));
@@ -257,13 +316,18 @@ public class ArduinoLEDTool extends JFrame {
 	       // jPanelSecond.add(new JButton("Page_Start"),BorderLayout.PAGE_START);
 	        //jPanelSecond.add(new JButton("Line_End"),BorderLayout.LINE_END);
 	      //  jPanelSecond.add(new JButton("Line Start"),BorderLayout.LINE_START);
-	        jPanelSecond.add(new JButton("Page_End"),BorderLayout.PAGE_END);
+	      //  jPanelSecond.add(new JButton("Page_End"),BorderLayout.PAGE_END);
 	        jPanelSecond.add(jPanelSettings,BorderLayout.CENTER);
 	        
 
+	        JTabbedPane jTabbedPane = new JTabbedPane();
+	        jTabbedPane.addChangeListener(new TabListener(screen));
+	        //JPanel jPanelFirst = new JPanel();
+
+	        //jPanelFirst.setLayout(null);
+	        jTabbedPane.addTab("Library", mainPanel);
 	        
-	        jTabbedPane.addTab("Configuration", jPanelSecond);
-	       
+	        jTabbedPane.addTab("Screen Configuration", jPanelSecond);
 	 
 	        frame.getContentPane().add(BorderLayout.NORTH, menuBar);
 
