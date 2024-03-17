@@ -49,6 +49,8 @@ public class ArduinoLEDTool extends JFrame {
 	//private static Properties properties;
 	private static List<DisplayObject> objectList;
 	private static HashMap<DisplayObject, JButton> playButtons;  
+	private static Boolean rotationEnabled = false;
+	private static Long rotationDelay = (long) 240000;
 	public static LEDScreen screen;
 	protected static final Logger logger = LogManager.getLogger();
 	
@@ -146,6 +148,27 @@ public class ArduinoLEDTool extends JFrame {
 	
 	
 	
+	
+	public static Boolean getRotationEnabled() {
+		return rotationEnabled;
+	}
+
+
+	public static void setRotationEnabled(Boolean rotationEnabled) {
+		ArduinoLEDTool.rotationEnabled = rotationEnabled;
+	}
+
+
+	public static Long getRotationDelay() {
+		return rotationDelay;
+	}
+
+
+	public static void setRotationDelay(Long rotationDelay) {
+		ArduinoLEDTool.rotationDelay = rotationDelay;
+	}
+
+
 	public static void main(String args[]){
 		
 		try {
@@ -247,6 +270,28 @@ public class ArduinoLEDTool extends JFrame {
 	       // setSize(Dimension)
 	        
 	        
+	        JPanel rotationPanel = new JPanel(new BorderLayout());
+	        JPanel jRotationHeader = new JPanel(new BorderLayout());
+	        jRotationHeader.add(new JLabel("Rotation(min):"),BorderLayout.LINE_START);
+            String range[]= { "1","2","4","8","16","32","64"};
+            rotationTime = new JList(range); //data has type Object[]
+            rotationTime.setSelectedIndex(3);
+            rotationTime.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            rotationTime.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            rotationTime.setVisibleRowCount(-1);
+            rotationTime.addListSelectionListener(new RotationTimeListener(screen));  
+           // jRotationHeader.add(jRotationHeader, BorderLayout.LINE_START);
+            jRotationHeader.add(rotationTime, BorderLayout.CENTER);
+            JCheckBox aapRotChekBox = new JCheckBox(); 
+            aapRotChekBox.setLabel("Enabled");
+            //aapRotChekBox.setBounds(0, 0,  50, 50);    
+            aapRotChekBox.setSelected(false);
+            jRotationHeader.add(aapRotChekBox, BorderLayout.LINE_END);
+	        //JPanel rotationPanel = new JPanel(new GridLayout(1, 4));
+           // rowPanel.setPreferredSize(new Dimension(50,50));
+	        mainPanel.add(jRotationHeader, BorderLayout.NORTH);
+	        
+	        
 	
 	
 	        // Text Area at the Center
@@ -297,8 +342,8 @@ public class ArduinoLEDTool extends JFrame {
             
             JPanel jRotationPanel = new JPanel(new BorderLayout());
             jRotationPanel.add(new JLabel("Rotation(min):"),BorderLayout.LINE_START);
-            String week[]= { "1","2","4","8","16","32","64"};
-            rotationTime = new JList(week); //data has type Object[]
+            String min[]= { "1","2","4","8","16","32","64"};
+            rotationTime = new JList(min); //data has type Object[]
             rotationTime.setSelectedIndex(3);
             rotationTime.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             rotationTime.setLayoutOrientation(JList.HORIZONTAL_WRAP);
