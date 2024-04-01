@@ -23,14 +23,16 @@ import java.util.Map;
 
 import co.uk.zloezh.led.listener.*;
 import co.uk.zloezh.led.object.*;
-
+import co.uk.zloezh.led.utils.HTTPUtils;
 
 import java.awt.BorderLayout;
 //import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 public class ArduinoLEDTool extends JFrame {
 	
@@ -53,16 +55,21 @@ public class ArduinoLEDTool extends JFrame {
 	private static Long rotationDelay = (long) 240000;
 	public static LEDScreen screen;
 	protected static final Logger logger = LogManager.getLogger();
+	public static JTextArea infoArea  =  new JTextArea(1, 1);
 	
 	ArduinoLEDTool()
     {
 		PropertiesObject properties = PropertiesObject.getInstance();
-		
 		screen = new LEDScreen(properties.getProperty("screen.ip"),Integer.valueOf(properties.getProperty("screen.width")),Integer.valueOf(properties.getProperty("screen.height")),properties.getProperty("screen.direction"));
+        infoArea.setText("Screen IP not Found");
+		HTTPUtils httpUtils = new HTTPUtils();
+		httpUtils.scanScreenIP(screen);
+		//screen.setiPAdress(iPAdress);
 		try {
             
 			playButtons = new HashMap<DisplayObject, JButton>();
-			
+
+	        
             String directoryPath = System.getProperty("user.dir") +  properties.getProperty("images.path");
 
             // Create a File object for the directory
@@ -182,6 +189,11 @@ public class ArduinoLEDTool extends JFrame {
 	        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        frame.setSize(400, 400);
 	
+	        //icon
+	        PropertiesObject properties = PropertiesObject.getInstance();
+			String windowIconPath = System.getProperty("user.dir") + properties.getProperty("images.icon.window"); 
+	        Image windowIcon = Toolkit.getDefaultToolkit().getImage(windowIconPath);  
+	        frame.setIconImage(windowIcon);  
 
 	        //Menu
 	        
@@ -197,8 +209,11 @@ public class ArduinoLEDTool extends JFrame {
 	       // JMenuItem m22 = new JMenuItem("Save as");
 	        mUtils.add(genArray);
 	       // mHelp.add(m22); 
-
-	       
+	        
+	        
+	        JPanel infoPanel = new JPanel(new FlowLayout());
+	        infoPanel.add(infoArea);
+	        
 	
 	        JPanel mainPanel = new JPanel(new BorderLayout());
 	        JPanel tablePanel = new JPanel(new GridLayout(objectList.size() + 1 , 1)); // +1 for header row 
@@ -380,7 +395,7 @@ public class ArduinoLEDTool extends JFrame {
 	        
 	       // frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
 	        frame.getContentPane().add(BorderLayout.CENTER, jTabbedPane);
-	       // frame.getContentPane().add(BorderLayout.SOUTH, infoText);
+	        frame.getContentPane().add(BorderLayout.SOUTH, infoPanel);
 
 	        
 	       

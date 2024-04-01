@@ -32,7 +32,7 @@ public class DisplayGif extends RenderThread{
 	
 
 	DisplayGifFile gifObject;
-	LEDScreen screen;
+
 	
 	public DisplayGif(DisplayGifFile cGgifObject, LEDScreen cScreen) {
 		super(cScreen);
@@ -115,7 +115,7 @@ public class DisplayGif extends RenderThread{
 							        			this.sleep(waitTime);
 							        			
 							        		}
-							        		HTTPUtils.SendFrameViaUDP(frame, screen);
+							        		HTTPUtils.SendFrameViaUDP(frame, this.screen);
 							        		lastFrameTime = System.currentTimeMillis();
 							        		break;
 							            }

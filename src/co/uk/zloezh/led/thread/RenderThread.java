@@ -11,9 +11,9 @@ public class RenderThread extends Thread {
 	private final Object LOCK_OBJECT = new Object();
     private boolean pauseThreadFlag = false;
 	
-	public RenderThread(LEDScreen screen) {
+	public RenderThread(LEDScreen cScreen) {
 		super();
-		this.screen = screen;
+		this.screen = cScreen;
 	}
 	
 	public boolean isPauseThreadFlag() {

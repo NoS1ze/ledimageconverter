@@ -15,4 +15,37 @@ public class LEDScreen {
 		
 	}
 
+	public String getiPAdress() {
+		return iPAdress;
+	}
+
+	public void setiPAdress(String iPAdress) {
+		this.iPAdress = iPAdress;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHight() {
+		return hight;
+	}
+
+	public void setHight(int hight) {
+		this.hight = hight;
+	}
+
+	
 }

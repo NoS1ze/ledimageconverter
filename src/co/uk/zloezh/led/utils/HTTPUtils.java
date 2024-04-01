@@ -10,15 +10,24 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.swing.JTextArea;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import co.uk.zloezh.led.ArduinoLEDTool;
+import co.uk.zloezh.led.PropertiesObject;
 import co.uk.zloezh.led.object.LEDFrame;
 import co.uk.zloezh.led.object.LEDScreen;
+
 
 public class HTTPUtils {
 	
 	protected static final Logger logger = LogManager.getLogger();
+	protected static final PropertiesObject properties = PropertiesObject.getInstance();
 	
 	public static void sendFrame( LEDFrame frame, LEDScreen screen) {
 		try {
@@ -160,8 +169,10 @@ public class HTTPUtils {
 	public static void SendFrameViaUDP(LEDFrame frame, LEDScreen screen) {
 		
 	        // Define the target IP address and port number
-	        String ipAddress = "192.168.1.229"; // Change this to the IP address of the receiver
-	        int port = 2390; // Change this to the port number of the receiver
+	      //  String ipAddress = "192.168.1.230"; // Change this to the IP address of the receiver
+		    String ipAddress = screen.getiPAdress(); // Change this to the IP address of the receiver
+		    
+		    int port = Integer.valueOf(properties.getProperty("screen.port.udp")); // Change this to the port number of the receiver
 	        
 	        // Message to be sent
 	     // Set request parameters
@@ -253,8 +264,8 @@ public class HTTPUtils {
 	public static void SendCommandViaUDP(LEDFrame frame, LEDScreen screen) {
 		
         // Define the target IP address and port number
-        String ipAddress = "192.168.1.229"; // Change this to the IP address of the receiver
-        int port = 2390; // Change this to the port number of the receiver
+		String ipAddress = screen.getiPAdress();
+		int port = Integer.valueOf(properties.getProperty("screen.port.udp"));
         
         // Message to be sent
      // Set request parameters
@@ -346,8 +357,8 @@ public class HTTPUtils {
 	public static void SendFrameViaUDPOLD(LEDFrame frame, LEDScreen screen) {
 		
         // Define the target IP address and port number
-        String ipAddress = "192.168.1.229"; // Change this to the IP address of the receiver
-        int port = 2390; // Change this to the port number of the receiver
+		String ipAddress = screen.getiPAdress();
+		int port = Integer.valueOf(properties.getProperty("screen.port.udp"));
         
         // Message to be sent
      // Set request parameters
@@ -435,4 +446,45 @@ public class HTTPUtils {
         }
 }
 
+	public static String scanScreenIP(LEDScreen screen) {
+		//int port = 80; // HTTP port
+        //int maxThreads = 50; // Maximum number of threads
+        int maxThreads  = Integer.valueOf(properties.getProperty("screen.ip.scan.threads")); // Maximum number of threads
+		int port = Integer.valueOf(properties.getProperty("screen.port.http"));
+        
+        
+        try {
+	        ScanWorker ipChecker = new ScanWorker(InetAddress.getByName(screen.getiPAdress()), port, screen);
+	        String iP = ipChecker.checkIp();
+	        if(!iP.isEmpty()) {
+	     	   
+	     		logger.info("Screen IP Valid: " + screen.getiPAdress());
+	     		ArduinoLEDTool.infoArea.setText(screen.getiPAdress());
+	     		
+	        }else {
+	        	logger.debug("IP Not responding, Scanning for screen IP.");
+		        
+	            // Get the local network address
+	        	String localIP = InetAddress.getLocalHost().getHostAddress();
+	            InetAddress localAddress = InetAddress.getByName(localIP.substring(0, localIP.lastIndexOf('.') + 1) + "1"); // Assuming a typical /24 subnet
+	
+	            ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
+	
+	            // Iterate through all possible IP addresses in the subnet
+	            for (int i = 1; i <= 254; i++) { // Assuming /24 subnet
+	                InetAddress address = InetAddress.getByName(localAddress.getHostAddress().substring(0, localAddress.getHostAddress().lastIndexOf('.') + 1) + i);
+	
+	                Runnable worker = new ScanWorker(address, port, screen);
+	                executor.execute(worker);
+	            }
+	            executor.shutdown();
+	        }
+	            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return null;
+        
+		//return iPAdress;
+	}
 }
