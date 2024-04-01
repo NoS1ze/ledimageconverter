@@ -53,7 +53,7 @@ public class DisplayGif extends RenderThread{
 	            	this.checkForPaused();
 
 	            		try {
-	            			var file = gifObject.getFile();
+	            			File file = gifObject.getFile();
 						    String[] imageatt = new String[]{
 						            "imageLeftPosition",
 						            "imageTopPosition",
