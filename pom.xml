@@ -19,13 +19,28 @@
 	                <target>21</target>
 	            </configuration>
 	        </plugin>
+	        <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<archive>
 						<manifest>
 							<mainClass>co.uk.zloezh.led.ArduinoLEDTool</mainClass>
+							
 						</manifest>
+						 <manifestEntries>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
