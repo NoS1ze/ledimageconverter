@@ -1,0 +1,1 @@
+Java Application to control/cast images to my Arduino DYI project. Not the best from coding & architecture structure, but could be useful for somebody for similar projects; Fill free to download & improve.
